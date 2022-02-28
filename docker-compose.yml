@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+    mosquitto:
+        image: mosquitto
+        build:
+            context: ./mosquitto
+            dockerfile: ./Dockerfile
+        restart: always
+        ports: 
+            - "1883:1883"
+    zigbee2mqtt:
+        container_name: zigbee2mqtt
+        image: koenkk/zigbee2mqtt:1.18.1
+        volumes:
+            - ./zigbee2mqtt:/app/data
+            - /run/udev:/run/udev:ro
+        devices:
+            - /dev/ttyACM0:/dev/ttyACM0
+        restart: always
+        network_mode: host
+        privileged: true
+        environment:
+            - TZ=Europe/Helsinki
